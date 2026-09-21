@@ -15,6 +15,7 @@ import { ReceiptCard } from "@/components/club/receipt-card";
 import { getFloor } from "@/lib/club/api";
 import { useOnline } from "@/hooks/use-online";
 import { offlineCheckoutBar } from "@/lib/club/offline-ops";
+import { saveFloor } from "@/lib/offline/local-floor";
 import { formatSom } from "@/lib/club/money";
 import {
   CATEGORY_LABEL,
@@ -32,8 +33,15 @@ export function BarPage() {
   const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ["floor"],
-    queryFn: () => getFloor(),
+    queryFn: async () => {
+      const result = await getFloor();
+      saveFloor(result).catch(() => {});
+      return result;
+    },
+    refetchInterval: online ? 12_000 : false,
+    refetchOnWindowFocus: online,
   });
+
   const products = data?.products ?? [];
   const [cart, setCart] = useState<Line[]>([]);
   const [filter, setFilter] = useState<"all" | Product["category"]>("all");

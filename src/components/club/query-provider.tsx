@@ -24,6 +24,13 @@ export function ClubQueryProvider({ children }: { children: ReactNode }) {
     // Boot the sync engine (registers the 'online' listener)
     syncEngine.init();
 
+    // Register Service Worker for offline PWA shell caching
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch((err) => {
+        console.warn("[SW] Registration error:", err);
+      });
+    }
+
     // When sync finishes, refetch fresh floor data from server
     function onSyncComplete() {
       client.invalidateQueries({ queryKey: ["floor"] });
@@ -31,6 +38,7 @@ export function ClubQueryProvider({ children }: { children: ReactNode }) {
     window.addEventListener("kiy-sync-complete", onSyncComplete);
     return () => window.removeEventListener("kiy-sync-complete", onSyncComplete);
   }, [client]);
+
 
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }

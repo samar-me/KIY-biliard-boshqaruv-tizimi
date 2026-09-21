@@ -4,9 +4,16 @@ import { PinGate } from "@/components/club/pin-gate";
 import { getCatalog } from "@/lib/club/api";
 
 export const Route = createFileRoute("/sozlamalar")({
-  loader: () => getCatalog(),
+  loader: async () => {
+    try {
+      return await getCatalog();
+    } catch {
+      return { tables: [], products: [] };
+    }
+  },
   component: SettingsRoute,
 });
+
 
 function SettingsRoute() {
   return (
