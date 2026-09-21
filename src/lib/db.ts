@@ -176,8 +176,14 @@ async function createSql(): Promise<Sql> {
         "or a server route loader, never from client code.",
     );
   }
+  if (!databaseUrl && (process.env.VERCEL || process.env.NODE_ENV === "production")) {
+    throw new Error(
+      "DATABASE_URL topilmadi! Iltimos, Vercel Settings -> Environment Variables bo'limiga DATABASE_URL ni qo'shing.",
+    );
+  }
   return dbSource === "neon" ? createNeonSql() : createPgliteSql();
 }
+
 
 /**
  * Get the shared, **server-only** SQL client. Neon when `DATABASE_URL` is set,
@@ -229,10 +235,11 @@ export function ensureDbReady(): Promise<void> {
 const globalBoot = globalThis as typeof globalThis & {
   __pgBootstrapPromise__?: Promise<void>;
 };
-if (typeof window === "undefined" && dbSource === "pglite") {
+if (typeof window === "undefined" && dbSource === "pglite" && !process.env.VERCEL) {
   globalBoot.__pgBootstrapPromise__ ??= ensureDbReady().catch((err) => {
     globalBoot.__pgBootstrapPromise__ = undefined;
     console.error("[db] PGLite bootstrap failed:", err);
     throw err;
   });
 }
+
