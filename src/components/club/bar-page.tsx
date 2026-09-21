@@ -81,13 +81,11 @@ export function BarPage() {
     mutationFn: (payMethod: PayMethod) =>
       offlineCheckoutBar(payMethod, cart, queryClient, online),
     onSuccess: (res) => {
-      setPayOpen(false);
       setCart([]);
       setReceipt(res);
     },
     onError: (err) => toast.error(err.message),
   });
-
 
   return (
     <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
@@ -205,42 +203,59 @@ export function BarPage() {
         </Button>
       </aside>
 
-      <Dialog open={payOpen} onOpenChange={setPayOpen}>
+      <Dialog
+        open={payOpen || Boolean(receipt)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPayOpen(false);
+            setReceipt(null);
+          }
+        }}
+      >
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Bar to‘lovi</DialogTitle>
-            <DialogDescription>{formatSom(total)}</DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-2 gap-2">
-            {(["naqd", "karta"] as const).map((method) => (
-              <Button
-                key={method}
-                size="lg"
-                variant={method === "naqd" ? "default" : "secondary"}
-                disabled={checkoutMut.isPending}
-                onClick={() => checkoutMut.mutate(method)}
-              >
-                {PAY_LABEL[method]}
-              </Button>
-            ))}
-          </div>
+          {receipt ? (
+            <>
+              <DialogHeader>
+                <DialogTitle>Chek</DialogTitle>
+                <DialogDescription>Savdo yozildi.</DialogDescription>
+              </DialogHeader>
+              <ReceiptCard receipt={receipt} />
+              <DialogFooter>
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    setReceipt(null);
+                    setPayOpen(false);
+                  }}
+                >
+                  Tayyor
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle>Bar to‘lovi</DialogTitle>
+                <DialogDescription>{formatSom(total)}</DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-2">
+                {(["naqd", "karta"] as const).map((method) => (
+                  <Button
+                    key={method}
+                    size="lg"
+                    variant={method === "naqd" ? "default" : "secondary"}
+                    disabled={checkoutMut.isPending}
+                    onClick={() => checkoutMut.mutate(method)}
+                  >
+                    {PAY_LABEL[method]}
+                  </Button>
+                ))}
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
 
-      <Dialog open={Boolean(receipt)} onOpenChange={(o) => !o && setReceipt(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Chek</DialogTitle>
-            <DialogDescription>Savdo yozildi.</DialogDescription>
-          </DialogHeader>
-          {receipt ? <ReceiptCard receipt={receipt} /> : null}
-          <DialogFooter>
-            <Button className="w-full" onClick={() => setReceipt(null)}>
-              Tayyor
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

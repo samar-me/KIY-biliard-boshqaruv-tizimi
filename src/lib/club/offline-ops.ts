@@ -222,10 +222,15 @@ export async function offlineCloseSession(
   online: boolean,
 ): Promise<Receipt> {
   if (online && ticketId > 0) {
-    const receipt = await closeSession({ data: { ticketId, payMethod } });
-    qc.invalidateQueries({ queryKey: ["floor"] });
-    return receipt;
+    try {
+      const receipt = await closeSession({ data: { ticketId, payMethod } });
+      qc.invalidateQueries({ queryKey: ["floor"] });
+      return receipt;
+    } catch (err) {
+      console.warn("[offline-ops] Online closeSession failed, falling back to offline:", err);
+    }
   }
+
 
   const session = table.session;
   if (!session) throw new Error("Seans topilmadi");
@@ -351,16 +356,21 @@ export async function offlineCheckoutBar(
   };
 
   if (online) {
-    const serverReceipt = await checkoutBar({
-      data: {
-        payMethod,
-        lines: lines.map((l) => ({ productId: l.product.id, qty: l.qty })),
-      },
-    });
-    qc.invalidateQueries({ queryKey: ["floor"] });
-    qc.invalidateQueries({ queryKey: ["report"] });
-    return serverReceipt;
+    try {
+      const serverReceipt = await checkoutBar({
+        data: {
+          payMethod,
+          lines: lines.map((l) => ({ productId: l.product.id, qty: l.qty })),
+        },
+      });
+      qc.invalidateQueries({ queryKey: ["floor"] });
+      qc.invalidateQueries({ queryKey: ["report"] });
+      return serverReceipt;
+    } catch (err) {
+      console.warn("[offline-ops] Online checkoutBar failed, falling back to offline:", err);
+    }
   }
+
 
   // Offline: update today total locally and queue
   const floor = getFloorData(qc);

@@ -16,7 +16,7 @@ export function ReceiptCard({ receipt }: { receipt: Receipt }) {
   }).format(ended);
 
   return (
-    <div className="rounded-xl border border-border bg-background px-4 py-4">
+    <div className="receipt-printable rounded-xl border border-border bg-background px-4 py-4">
       <div className="flex items-baseline justify-between">
         <p className="font-display text-lg font-medium">KIY</p>
         <p className="text-xs text-muted tabular-nums">#{receipt.id}</p>

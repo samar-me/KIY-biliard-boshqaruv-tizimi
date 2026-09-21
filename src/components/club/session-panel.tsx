@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Minus, Plus, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +40,11 @@ export function SessionPanel({
   products: Product[];
   onClose: () => void;
 }) {
-  const session = table.session;
+  const lastSessionRef = useRef(table.session);
+  if (table.session) {
+    lastSessionRef.current = table.session;
+  }
+  const session = table.session ?? lastSessionRef.current;
   const now = useNow(1000);
   const online = useOnline();
 
@@ -80,7 +84,6 @@ export function SessionPanel({
     mutationFn: (payMethod: PayMethod) =>
       offlineCloseSession(session!.id, payMethod, table, now, queryClient, online),
     onSuccess: (data) => {
-      setPayOpen(false);
       setReceipt(data);
     },
     onError: (err) => toast.error(err.message),
@@ -94,42 +97,6 @@ export function SessionPanel({
     },
     onError: (err) => toast.error(err.message),
   });
-
-
-  if (!session && !receipt) return null;
-
-  if (!session && receipt) {
-    return (
-      <Dialog
-        open
-        onOpenChange={(o) => {
-          if (!o) {
-            setReceipt(null);
-            onClose();
-          }
-        }}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Chek</DialogTitle>
-            <DialogDescription>Seans yopildi.</DialogDescription>
-          </DialogHeader>
-          <ReceiptCard receipt={receipt} />
-          <DialogFooter>
-            <Button
-              className="w-full"
-              onClick={() => {
-                setReceipt(null);
-                onClose();
-              }}
-            >
-              Tayyor
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
-  }
 
   if (!session) return null;
 
@@ -277,48 +244,62 @@ export function SessionPanel({
         </div>
       </div>
 
-      <Dialog open={payOpen} onOpenChange={setPayOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>To‘lov</DialogTitle>
-            <DialogDescription>
-              {table.name} · {formatSom(total)}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-2 gap-2">
-            {(["naqd", "karta"] as const).map((method) => (
-              <Button
-                key={method}
-                size="lg"
-                variant={method === "naqd" ? "default" : "secondary"}
-                disabled={closeMut.isPending}
-                onClick={() => closeMut.mutate(method)}
-              >
-                {PAY_LABEL[method]}
-              </Button>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={Boolean(receipt)} onOpenChange={(o) => !o && (setReceipt(null), onClose())}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Chek</DialogTitle>
-            <DialogDescription>Seans yopildi.</DialogDescription>
-          </DialogHeader>
-          {receipt ? <ReceiptCard receipt={receipt} /> : null}
-          <DialogFooter>
-            <Button
-              className="w-full"
-              onClick={() => {
-                setReceipt(null);
-                onClose();
-              }}
-            >
-              Tayyor
-            </Button>
-          </DialogFooter>
+      <Dialog
+        open={payOpen || Boolean(receipt)}
+        onOpenChange={(o) => {
+          if (!o) {
+            setPayOpen(false);
+            if (receipt) {
+              setReceipt(null);
+              onClose();
+            }
+          }
+        }}
+      >
+        <DialogContent className="max-w-md">
+          {receipt ? (
+            <>
+              <DialogHeader>
+                <DialogTitle>Chek</DialogTitle>
+                <DialogDescription>Seans muvaffaqiyatli yopildi</DialogDescription>
+              </DialogHeader>
+              <ReceiptCard receipt={receipt} />
+              <DialogFooter>
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    setReceipt(null);
+                    setPayOpen(false);
+                    onClose();
+                  }}
+                >
+                  Tayyor
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle>To‘lov turi</DialogTitle>
+                <DialogDescription>
+                  {table.name} · {formatSom(total)}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-2 pt-2">
+                {(["naqd", "karta"] as const).map((method) => (
+                  <Button
+                    key={method}
+                    size="lg"
+                    variant={method === "naqd" ? "default" : "secondary"}
+                    disabled={closeMut.isPending}
+                    onClick={() => closeMut.mutate(method)}
+                  >
+                    {PAY_LABEL[method]}
+                  </Button>
+                ))}
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
