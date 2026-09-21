@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-background: #0c100e;
+  --color-foreground: #eef2ee;
+  --color-primary: #3d8f62;
+  --color-primary-foreground: #f4faf6;
+  --color-surface: #151c18;
+  --color-surface-2: #1c2620;
+  --color-muted: #8b968e;
+  --color-border: #2a342e;
+  --color-danger: #c45c4a;
+  --color-danger-foreground: #fdf6f4;
+  --color-felt: #1b5338;
+  --color-felt-lit: #246b48;
+  --color-rail: #1a1713;
+  --color-ring: #3d8f62;
+  --color-card: #151c18;
+  --color-card-foreground: #eef2ee;
+  --color-popover: #151c18;
+  --color-popover-foreground: #eef2ee;
+  --color-accent: #1c2620;
+  --color-accent-foreground: #eef2ee;
+  --color-input: #2a342e;
+  --color-secondary: #1c2620;
+  --color-secondary-foreground: #eef2ee;
+  --color-destructive: #c45c4a;
+  --color-destructive-foreground: #fdf6f4;
+
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+
+  --shadow-border: 0 0 0 1px color-mix(in oklab, var(--color-foreground) 8%, transparent);
+  --shadow-border-hover: 0 0 0 1px color-mix(in oklab, var(--color-foreground) 14%, transparent);
+
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html,
+  body,
+  #app {
+    min-height: 100%;
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Ultra-fast touch response on mobile (removes 300ms tap delay & gray flicker) */
+  button,
+  [role="button"],
+  a,
+  input,
+  select {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent accidental text selection during fast tapping on cash register */
+  button,
+  [role="button"],
+  article {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-primary) 40%, transparent);
+    color: var(--color-foreground);
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.felt-bed {
+  background: var(--color-felt);
+  box-shadow: inset 0 0 2.5rem color-mix(in oklab, black 38%, transparent);
+}
+
+.felt-bed-lit {
+  background: var(--color-felt-lit);
+  box-shadow: inset 0 0 2.5rem color-mix(in oklab, black 28%, transparent);
+}
+
+.pocket {
+  position: absolute;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 9999px;
+  background: color-mix(in oklab, black 82%, var(--color-felt));
+  box-shadow: inset 0 1px 2px color-mix(in oklab, white 12%, transparent);
+}
+
+.cue-ball {
+  position: absolute;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 9999px;
+  left: 18%;
+  top: 52%;
+  background: var(--color-foreground);
+  box-shadow: 0 1px 2px color-mix(in oklab, black 40%, transparent);
+  animation: cue-drift 16s var(--ease-out) infinite alternate;
+}
+
+@keyframes cue-drift {
+  0% {
+    left: 18%;
+    top: 52%;
+  }
+  100% {
+    left: 72%;
+    top: 24%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue-ball {
+    animation: none;
+    left: 48%;
+    top: 42%;
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "KIY",
+      "hasCanvas": false,
+      "bodyTextLen": 419,
+      "bodyTextHash": "98d6884d62a491c39aa97865c44fee17307d0191a3eff85cc526332a2cec4852",
+      "bodyTextPrefix": "KIY BILYARD KLUBI Stollar Bar Hisobot Sozlama 18:42 ZAL Stollar ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [
+        "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <MatchView router={{...}} match={{id:\"//\",ssr:true, ...}}>\n      <SafeFragment>\n        <SafeFragment fallback={null}>\n          <CatchBoundary getResetKey={function getResetKey} errorComponent={function AppErrorComponent} ...>\n            <SafeFragment fallback={function fallback}>\n              <MatchInnerImpl match={{id:\"//\",ssr:true, ...}}>\n                <Lazy>\n                  <Home>\n                    <FloorPage initial={{tables:[...], ...}}>\n                      <div className=\"flex flex-...\">\n                        <div className=\"flex flex-...\">\n                          <div>\n                          <div className=\"flex gap-6\">\n                            <Metric>\n                            <Metric label=\"Bugun\" value={\"194,834 ...\"}>\n                              <div className=\"text-right\">\n                                <p>\n                                <p className=\"font-mono text-lg font-medium tabular-nums\">\n+                                 {\"194,834 so'm\"}\n-                                 {\"194 834 so'm\"}\n                        ...\n"
+      ],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "KIY",
+      "hasCanvas": false,
+      "bodyTextLen": 405,
+      "bodyTextHash": "4e96b936d61ce37a4558e53d2619b3f8c4de09f2a39036897d159ffdac7aa722",
+      "bodyTextPrefix": "KIY 18:42 ZAL Stollar BAND 2/6 BUGUN 204,168 so'm Rus 1 Rus · 40",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [
+        "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <MatchView router={{...}} match={{id:\"//\",ssr:true, ...}}>\n      <SafeFragment>\n        <SafeFragment fallback={null}>\n          <CatchBoundary getResetKey={function getResetKey} errorComponent={function AppErrorComponent} ...>\n            <SafeFragment fallback={function fallback}>\n              <MatchInnerImpl match={{id:\"//\",ssr:true, ...}}>\n                <Lazy>\n                  <Home>\n                    <FloorPage initial={{tables:[...], ...}}>\n                      <div className=\"flex flex-...\">\n                        <div className=\"flex flex-...\">\n                          <div>\n                          <div className=\"flex gap-6\">\n                            <Metric>\n                            <Metric label=\"Bugun\" value={\"194,834 ...\"}>\n                              <div className=\"text-right\">\n                                <p>\n                                <p className=\"font-mono text-lg font-medium tabular-nums\">\n+                                 {\"194,834 so'm\"}\n-                                 {\"194 834 so'm\"}\n                        ...\n"
+      ],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
